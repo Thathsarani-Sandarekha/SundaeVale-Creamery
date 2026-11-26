@@ -1,0 +1,3 @@
+-r requirements.txt
+# Large optional package required for OCR of image-only/scanned invoices.
+docling>=2,<4

@@ -1,0 +1,69 @@
+{
+  "family": "sundaevale-worker",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "2048",
+  "memory": "8192",
+  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/sundaevale-execution",
+  "runtimePlatform": {
+    "operatingSystemFamily": "LINUX",
+    "cpuArchitecture": "X86_64"
+  },
+  "containerDefinitions": [
+    {
+      "name": "worker",
+      "image": "ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/sundaevale-backend:GIT_SHA",
+      "essential": true,
+      "environment": [
+        {
+          "name": "INVOICE_STORAGE_BACKEND",
+          "value": "s3"
+        },
+        {
+          "name": "INVOICE_S3_BUCKET",
+          "value": "PRIVATE_BUCKET_NAME"
+        },
+        {
+          "name": "INVOICE_S3_PREFIX",
+          "value": "invoices/originals"
+        },
+        {
+          "name": "INVOICE_EXTRACTION_MODE",
+          "value": "rules"
+        },
+        {
+          "name": "INVOICE_OCR_GEOMETRY",
+          "value": "0"
+        },
+        {
+          "name": "GROQ_MODEL",
+          "value": ""
+        }
+      ],
+      "secrets": [
+        {
+          "name": "DATABASE_URL",
+          "valueFrom": "arn:aws:secretsmanager:REGION:ACCOUNT_ID:secret:sundaevale-db-url-SECRET_SUFFIX"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/sundaevale/worker",
+          "awslogs-region": "REGION",
+          "awslogs-stream-prefix": "app"
+        }
+      },
+      "command": [
+        "python",
+        "-m",
+        "backend.invoice_processing.worker",
+        "--watch"
+      ],
+      "stopTimeout": 120
+    }
+  ],
+  "taskRoleArn": "arn:aws:iam::ACCOUNT_ID:role/sundaevale-worker-task"
+}

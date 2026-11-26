@@ -1,0 +1,181 @@
+{
+  "dataset": "SundaeVale fictional synthetic invoices v1",
+  "source": "samples/invoices/generate_samples.py; independently check labels against PDFs before reporting externally",
+  "fixtures": [
+    {
+      "file": "01_blue_meadow_dairy.pdf",
+      "expected": {
+        "supplier_name": "Blue Meadow Dairy Co.",
+        "invoice_number": "BMD-2026-0141",
+        "invoice_date": "2026-11-02",
+        "due_date": "2026-12-02",
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Whole milk - gallon",
+            "quantity": "48",
+            "unit_price": "3.50",
+            "line_total": "168.00"
+          },
+          {
+            "description": "Heavy cream - gallon",
+            "quantity": "20",
+            "unit_price": "9.00",
+            "line_total": "180.00"
+          }
+        ],
+        "subtotal": "348.00",
+        "tax": "0.00",
+        "shipping": "18.00",
+        "discount": "0.00",
+        "total": "366.00"
+      },
+      "expected_issue_codes": []
+    },
+    {
+      "file": "03_frostpak_incorrect_total.pdf",
+      "expected": {
+        "supplier_name": "FrostPak Packaging LLC",
+        "invoice_number": "FPK-2026-091",
+        "invoice_date": "2026-11-05",
+        "due_date": "2026-12-05",
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "12 oz printed ice cream cups",
+            "quantity": "500",
+            "unit_price": "0.20",
+            "line_total": "100.00"
+          },
+          {
+            "description": "Compostable lids",
+            "quantity": "500",
+            "unit_price": "0.08",
+            "line_total": "40.00"
+          }
+        ],
+        "subtotal": "140.00",
+        "tax": "9.80",
+        "shipping": "12.00",
+        "discount": "0.00",
+        "total": "180.00"
+      },
+      "expected_issue_codes": [
+        "TOTAL_MISMATCH"
+      ]
+    },
+    {
+      "file": "05_ember_cocoa_missing_date.pdf",
+      "expected": {
+        "supplier_name": "Ember Cocoa Supply Inc.",
+        "invoice_number": "ECS-2026-032",
+        "invoice_date": null,
+        "due_date": "2026-12-12",
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Dutch cocoa - 25 lb bag",
+            "quantity": "4",
+            "unit_price": "45.00",
+            "line_total": "180.00"
+          }
+        ],
+        "subtotal": "180.00",
+        "tax": "0.00",
+        "shipping": "0.00",
+        "discount": "0.00",
+        "total": "180.00"
+      },
+      "expected_issue_codes": [
+        "MISSING_REQUIRED"
+      ]
+    },
+    {
+      "file": "04_blue_meadow_duplicate.pdf",
+      "expected": {
+        "supplier_name": "Blue Meadow Dairy Co.",
+        "invoice_number": "BMD-2026-0141",
+        "invoice_date": "2026-11-02",
+        "due_date": "2026-12-02",
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Whole milk - gallon",
+            "quantity": "48",
+            "unit_price": "3.50",
+            "line_total": "168.00"
+          },
+          {
+            "description": "Heavy cream - gallon",
+            "quantity": "20",
+            "unit_price": "9.00",
+            "line_total": "180.00"
+          }
+        ],
+        "subtotal": "348.00",
+        "tax": "0.00",
+        "shipping": "18.00",
+        "discount": "0.00",
+        "total": "366.00"
+      },
+      "expected_issue_codes": [
+        "POSSIBLE_DUPLICATE"
+      ],
+      "duplicate_of": "01_blue_meadow_dairy.pdf"
+    },
+    {
+      "file": "06_lakeshore_logistics.pdf",
+      "expected": {
+        "supplier_name": "Lakeshore Logistics LLC",
+        "invoice_number": "LL-2026-230",
+        "invoice_date": "2026-11-09",
+        "due_date": "2026-11-30",
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Refrigerated delivery - Route A",
+            "quantity": "2",
+            "unit_price": "125.00",
+            "line_total": "250.00"
+          },
+          {
+            "description": "Dry ice handling",
+            "quantity": "4",
+            "unit_price": "12.50",
+            "line_total": "50.00"
+          }
+        ],
+        "subtotal": "300.00",
+        "tax": "0.00",
+        "shipping": "0.00",
+        "discount": "0.00",
+        "total": "300.00"
+      },
+      "expected_issue_codes": []
+    },
+    {
+      "file": "02_orchard_valley_scanned.pdf",
+      "expected": {
+        "supplier_name": "Orchard Valley Ingredients",
+        "invoice_number": "OVI-2026-055",
+        "invoice_date": "2026-11-03",
+        "due_date": "2026-12-03",
+        "currency": "USD",
+        "line_items": [
+          {
+            "description": "Frozen strawberry puree - case",
+            "quantity": "12",
+            "unit_price": "22.00",
+            "line_total": "264.00"
+          }
+        ],
+        "subtotal": "264.00",
+        "tax": "0.00",
+        "shipping": "14.00",
+        "discount": "0.00",
+        "total": "278.00"
+      },
+      "expected_issue_codes": []
+    }
+  ]
+}

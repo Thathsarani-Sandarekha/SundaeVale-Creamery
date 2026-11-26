@@ -1,0 +1,57 @@
+{
+  "family": "sundaevale-frontend",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/sundaevale-execution",
+  "runtimePlatform": {
+    "operatingSystemFamily": "LINUX",
+    "cpuArchitecture": "X86_64"
+  },
+  "containerDefinitions": [
+    {
+      "name": "frontend",
+      "image": "ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/sundaevale-frontend:GIT_SHA",
+      "essential": true,
+      "environment": [
+        {
+          "name": "INVOICE_API_BASE_URL",
+          "value": "http://PRIVATE_API_DNS:8001"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "INVOICE_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:REGION:ACCOUNT_ID:secret:sundaevale-api-key-SECRET_SUFFIX"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/sundaevale/frontend",
+          "awslogs-region": "REGION",
+          "awslogs-stream-prefix": "app"
+        }
+      },
+      "portMappings": [
+        {
+          "containerPort": 3000,
+          "protocol": "tcp"
+        }
+      ],
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "node -e \"fetch('http://127.0.0.1:3000/').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))\""
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    }
+  ]
+}

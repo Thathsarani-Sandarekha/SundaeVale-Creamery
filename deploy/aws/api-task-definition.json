@@ -1,0 +1,70 @@
+{
+  "family": "sundaevale-api",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/sundaevale-execution",
+  "runtimePlatform": {
+    "operatingSystemFamily": "LINUX",
+    "cpuArchitecture": "X86_64"
+  },
+  "containerDefinitions": [
+    {
+      "name": "api",
+      "image": "ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/sundaevale-backend:GIT_SHA",
+      "essential": true,
+      "environment": [
+        {
+          "name": "INVOICE_STORAGE_BACKEND",
+          "value": "s3"
+        },
+        {
+          "name": "INVOICE_S3_BUCKET",
+          "value": "PRIVATE_BUCKET_NAME"
+        },
+        {
+          "name": "INVOICE_S3_PREFIX",
+          "value": "invoices/originals"
+        }
+      ],
+      "secrets": [
+        {
+          "name": "DATABASE_URL",
+          "valueFrom": "arn:aws:secretsmanager:REGION:ACCOUNT_ID:secret:sundaevale-db-url-SECRET_SUFFIX"
+        },
+        {
+          "name": "INVOICE_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:REGION:ACCOUNT_ID:secret:sundaevale-api-key-SECRET_SUFFIX"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/sundaevale/api",
+          "awslogs-region": "REGION",
+          "awslogs-stream-prefix": "app"
+        }
+      },
+      "portMappings": [
+        {
+          "containerPort": 8001,
+          "protocol": "tcp"
+        }
+      ],
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=3)\""
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      }
+    }
+  ],
+  "taskRoleArn": "arn:aws:iam::ACCOUNT_ID:role/sundaevale-api-task"
+}

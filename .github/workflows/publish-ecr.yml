@@ -1,0 +1,31 @@
+name: Publish images to ECR (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: aws-publish
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_PUBLISH_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - uses: aws-actions/amazon-ecr-login@v2
+        id: ecr
+      - name: Build and publish API/worker and frontend images
+        env:
+          REGISTRY: ${{ steps.ecr.outputs.registry }}
+          BACKEND_REPO: ${{ vars.ECR_BACKEND_REPOSITORY }}
+          FRONTEND_REPO: ${{ vars.ECR_FRONTEND_REPOSITORY }}
+          TAG: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test -n "$REGISTRY" && test -n "$BACKEND_REPO" && test -n "$FRONTEND_REPO"
+          docker build -f backend/Dockerfile -t "$REGISTRY/$BACKEND_REPO:$TAG" .
+          docker build -f frontend/Dockerfile -t "$REGISTRY/$FRONTEND_REPO:$TAG" frontend
+          docker push "$REGISTRY/$BACKEND_REPO:$TAG"
+          docker push "$REGISTRY/$FRONTEND_REPO:$TAG"

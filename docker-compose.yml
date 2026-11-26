@@ -1,0 +1,76 @@
+# Optional development PostgreSQL for the local invoice-processing API and worker.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: sundaevale
+      POSTGRES_USER: sundaevale
+      POSTGRES_PASSWORD: sundaevale # demo ONLY; change for any shared environment
+    ports:
+      - "127.0.0.1:5433:5432"
+    volumes:
+      - invoice-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sundaevale -d sundaevale"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  api:
+    profiles: [app]
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: sundaevale-backend:local
+    environment:
+      DATABASE_URL: postgresql+psycopg://sundaevale:sundaevale@postgres:5432/sundaevale
+      INVOICE_STORAGE_DIR: /app/.invoice_data/uploads
+      INVOICE_STORAGE_BACKEND: local
+      INVOICE_API_KEY: ${INVOICE_API_KEY:-REPLACE_WITH_A_LONG_RANDOM_LOCAL_SECRET}
+    ports:
+      - "127.0.0.1:8001:8001"
+    volumes:
+      - invoice-pdf-data:/app/.invoice_data
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=3)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+  worker:
+    profiles: [app]
+    image: sundaevale-backend:local
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: [python, -m, backend.invoice_processing.worker, --watch]
+    environment:
+      DATABASE_URL: postgresql+psycopg://sundaevale:sundaevale@postgres:5432/sundaevale
+      INVOICE_STORAGE_DIR: /app/.invoice_data/uploads
+      INVOICE_STORAGE_BACKEND: local
+      INVOICE_EXTRACTION_MODE: ${INVOICE_EXTRACTION_MODE:-rules}
+      INVOICE_OCR_GEOMETRY: ${INVOICE_OCR_GEOMETRY:-0}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      GROQ_MODEL: ${GROQ_MODEL:-}
+    volumes:
+      - invoice-pdf-data:/app/.invoice_data
+    depends_on:
+      api:
+        condition: service_healthy
+  frontend:
+    profiles: [app]
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    environment:
+      INVOICE_API_BASE_URL: http://api:8001
+      INVOICE_API_KEY: ${INVOICE_API_KEY:-REPLACE_WITH_A_LONG_RANDOM_LOCAL_SECRET}
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      api:
+        condition: service_healthy
+volumes:
+  invoice-postgres-data:
+  invoice-pdf-data:
