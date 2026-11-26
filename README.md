@@ -4,7 +4,7 @@
 
 ### Intelligent Accounts Payable & Financial Insights Platform
 
-**Document AI · Human-verified approvals · Supplier analytics · Docker & AWS architecture**
+**Document AI · Human-verified approvals · Supplier analytics · Docker & AWS**
 
 A full-stack finance operations platform that converts supplier PDF invoices into validated, reviewable financial records, then turns approved data into supplier insights, due-date views, and accounting-ready CSV exports.
 
