@@ -96,8 +96,6 @@ Open **http://localhost:3000**. API documentation: **http://127.0.0.1:8001/docs*
 docker compose --profile app up --build
 ```
 
-For the AWS container service definitions, S3 access policies, and ECR publishing workflow, see [`deploy/aws/`](deploy/aws/) and [`.github/workflows/`](.github/workflows/).
-
 ## End-to-end demonstration
 
 1. **Upload** supplier invoice PDFs through the finance portal.

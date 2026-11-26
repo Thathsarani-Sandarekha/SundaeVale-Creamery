@@ -1,1 +1,0 @@
-For an RDS deployment, download the appropriate official Amazon RDS CA bundle over HTTPS and save as `rds-ca-bundle.pem` in this directory **before** building and publishing the backend image. Docker copies this directory to `/app/certs`. This repository does not bundle or fetch certificates; no RDS TLS connection was tested here.
