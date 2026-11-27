@@ -16,7 +16,7 @@ A full-stack finance operations platform that converts supplier PDF invoices int
 ![Docker](https://img.shields.io/badge/Docker-Containers-2496ED?logo=docker&logoColor=white)
 ![AWS](https://img.shields.io/badge/AWS-ECS_%7C_S3_%7C_RDS-FF9900?logo=amazonaws&logoColor=white)
 
-**[Experience](#product-experience) · [Features](#what-it-does) · [Architecture](#system-architecture) · [Quickstart](#how-to-run-the-code) · [Demo](#end-to-end-demonstration) · [Evaluation](#evaluation--verification) · [Repository](#repository-structure)**
+**[Experience](#product-experience) · [Features](#what-it-does) · [Architecture](#system-architecture) · [Quickstart](#how-to-run-the-code) · [Demo](#Demo Videos) · [Evaluation](#evaluation--verification) · [Repository](#repository-structure)**
 
 </div>
 
