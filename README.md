@@ -96,15 +96,16 @@ Open **http://localhost:3000**. API documentation: **http://127.0.0.1:8001/docs*
 docker compose --profile app up --build
 ```
 
-## End-to-end demonstration
+## Demo Videos
 
-1. **Upload** supplier invoice PDFs through the finance portal.
-2. **Process** invoices in the background using digital parsing or OCR, Groq extraction, and arithmetic/duplicate validation.
-3. **Review** the original PDF beside extracted data; correct fields, resolve findings, and approve or reject.
-4. **Explore insights** as approved invoice values, monthly trends, and supplier totals update.
-5. **Export** selected approved invoices to CSV for downstream accounting workflows.
+Explore SundaeVale through product demonstrations and a technical architecture walkthrough.
 
-The demo workspace uses **synthetic supplier invoices and fictional approval records**; it does not execute supplier payments.
+| Video | Description | Watch |
+|---|---|---|
+| **Complete Product Demonstration** | Invoice upload, AI extraction, financial validation, human approval, supplier analytics, and CSV export. | [▶ Watch Demo](VIDEO_1_URL) |
+| **System Architecture & Engineering** | FastAPI, Next.js, Groq, OCR, background processing, Docker, CI/CD, and AWS architecture. | [▶ Watch Architecture Walkthrough](VIDEO_2_URL) |
+| **60-Second Project Showcase** | A quick demonstration of AI-powered invoice processing and financial error detection. | [▶ Watch Short Demo](VIDEO_3_URL) |
+
 
 ## Evaluation & verification
 
